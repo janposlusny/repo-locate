@@ -65,9 +65,19 @@ def main() -> int:
         )
         elapsed = round(time.time() - started, 1)
         output = proc.stdout.strip()
+        stderr = proc.stderr.strip()
         required_hits = {path: path in output for path in required}
         support_hits = {path: path in output for path in support}
-        passed = proc.returncode == 0 and all(required_hits.values())
+
+        # FastContext catches endpoint failures and prints them as a normal final
+        # answer, so the process can still exit 0. Do not count a dead server or
+        # transport failure as a model/localization failure.
+        infrastructure_error = (
+            "LLM API call failed" in output
+            or "Connection error" in output
+            or proc.returncode != 0
+        )
+        passed = not infrastructure_error and all(required_hits.values())
         results.append(
             {
                 "run": run,
@@ -76,36 +86,54 @@ def main() -> int:
                 "required_hits": required_hits,
                 "support_hits": support_hits,
                 "passed": passed,
+                "infrastructure_error": infrastructure_error,
             }
         )
         print(f"\n=== RUN {run} ({elapsed}s) ===")
         print(output or "<no stdout>")
-        if proc.stderr.strip():
+        if stderr:
             print("\n[stderr tail]")
-            print(proc.stderr.strip()[-3000:])
+            print(stderr[-3000:])
 
-    passes = sum(bool(result["passed"]) for result in results)
+    valid_results = [result for result in results if not result["infrastructure_error"]]
+    passes = sum(bool(result["passed"]) for result in valid_results)
+    errors = len(results) - len(valid_results)
+
     print("\nRESULTS\n=======")
     for result in results:
         req = [p for p, hit in result["required_hits"].items() if hit]
         sup = [p for p, hit in result["support_hits"].items() if hit]
+        if result["infrastructure_error"]:
+            status = "ERROR"
+        else:
+            status = "PASS" if result["passed"] else "FAIL"
         print(
-            f"run {result['run']}: {'PASS' if result['passed'] else 'FAIL'} | "
+            f"run {result['run']}: {status} | "
             f"required={req or 'none'} | support={sup or 'none'} | {result['seconds']}s"
         )
 
-    if passes == args.runs:
+    valid_count = len(valid_results)
+    if valid_count == 0:
+        verdict = "INFRA ERROR - no valid localization runs completed"
+    elif valid_count == 1 and passes == 1:
+        verdict = "PASS - one successful localization run; more valid runs needed"
+    elif valid_count >= 3 and passes == valid_count:
         verdict = "STRONG PASS - reliable on this synthetic localization task"
-    elif passes >= max(2, (args.runs + 1) // 2):
-        verdict = "PROMISING - useful but stochastic"
+    elif passes >= max(2, (valid_count + 1) // 2):
+        verdict = "PROMISING - useful but stochastic or still a small sample"
     elif passes:
         verdict = "WEAK - occasional localization success"
     else:
         verdict = "FAIL - production + test targets were not reliably recovered"
 
-    print(f"\nRequired-target reliability: {passes}/{args.runs}")
+    print(f"\nRequired-target reliability: {passes}/{valid_count} valid runs")
+    if errors:
+        print(f"Infrastructure errors: {errors}/{args.runs} requested runs")
     print("Verdict:", verdict)
     print("Trajectories:", env["FASTCONTEXT_TRAJ_DIR"])
+
+    if valid_count == 0:
+        return 2
     return 0 if passes else 1
 
 
