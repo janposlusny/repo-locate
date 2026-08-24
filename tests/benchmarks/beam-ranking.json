@@ -1,0 +1,19 @@
+{
+  "name": "beam-ranking-localization",
+  "query": "Long-horizon crop plans are undervalued during beam-state ranking because valuation only reflects shops currently unlocked. Locate the production code that computes approximate values used to rank and prune beam-search states, and the tests relevant to that ranking path. The intended change is only to beam-state ranking; candidate admission and final portfolio selection should remain unchanged. Future-shop valuation must preserve the live absolute game day so shop-unlock boundaries are handled correctly.",
+  "required_files": [
+    "harvestbot/planning.py",
+    "tests/test_planning.py"
+  ],
+  "support_files": [
+    "harvestbot/economics.py",
+    "tests/test_economics.py"
+  ],
+  "decoy_files": [
+    "analysis/crop_unlock_report.py",
+    "harvestbot/agent.py",
+    "harvestbot/animal_dispatch.py",
+    "docs/architecture.md"
+  ],
+  "notes": "The oracle is intentionally stored outside tests/fixtures/beam-ranking/repo so FastContext cannot inspect it during the benchmark. A run passes only if both required files appear in the final citations."
+}
