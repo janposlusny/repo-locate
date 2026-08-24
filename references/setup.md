@@ -27,7 +27,10 @@ Optional:
 ```bash
 export FASTCONTEXT_MAX_TURNS=8
 export FASTCONTEXT_TRAJ_DIR=/tmp/fastcontext-trajectories
+export FASTCONTEXT_TEMPERATURE=0.6
 ```
+
+`repo-locate` defaults FastContext to temperature `0.6`. This is applied by the bundled launcher because the upstream FastContext CLI currently defaults to `1.0` and does not expose a temperature flag. Override `FASTCONTEXT_TEMPERATURE` only when deliberately running a sampling experiment.
 
 Trajectories intentionally default outside the repository to avoid contaminating subsequent searches.
 
