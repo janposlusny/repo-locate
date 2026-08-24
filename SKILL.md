@@ -27,7 +27,7 @@ Skip it when the exact relevant file/symbol/range is already known, or the answe
 1. **Form a localization query, not a solution prompt.** Describe the behavior or flow to locate and, when useful, ask for its tests or direct callers. Do not ask FastContext to design or implement the fix.
 2. **Delegate once.** If a read-only FastContext MCP tool such as `fastcontext_explore` is available, use it. Otherwise resolve this skill directory and run:
 
-   `scripts/repo-locate.sh "<focused localization query>"`
+   `bash scripts/repo-locate.sh "<focused localization query>"`
 
 3. **Treat returned citations as candidate evidence.** Open the cited ranges yourself, normally with about 30–80 lines of surrounding context. Verify that the symbols actually implement the requested behavior.
 4. **Do not immediately repeat broad repository searches.** If the citations are sufficient, continue from them.
