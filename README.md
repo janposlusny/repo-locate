@@ -7,7 +7,7 @@ The same skill directory is designed for Codex, Claude Code, and Antigravity CLI
 ## Install
 
 1. Put this directory somewhere permanent.
-2. Run `./install.sh` to symlink it into all three agents.
+2. Run `bash ./install.sh` to symlink it into all three agents.
 3. Ensure `fastcontext` is on `PATH` and your local FastContext endpoint variables are configured, or register a FastContext MCP tool in the host agent.
 
 See `references/setup.md` for details.
