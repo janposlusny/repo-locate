@@ -37,7 +37,7 @@ Trajectories intentionally default outside the repository to avoid contaminating
 - Claude Code: `~/.claude/skills/repo-locate`
 - Antigravity CLI (`agy`): `~/.gemini/antigravity-cli/skills/repo-locate`
 
-Run the bundled `install.sh` from the extracted skill directory to create symlinks for all three.
+Run `bash ./install.sh` from the cloned skill directory to create symlinks for all three.
 
 ## MCP transport
 
