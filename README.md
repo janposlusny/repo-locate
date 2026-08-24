@@ -4,6 +4,8 @@ A portable Agent Skill that delegates cold-start repository localization to Fast
 
 The same skill directory is designed for Codex, Claude Code, and Antigravity CLI (`agy`).
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/janposlusny/repo-locate/blob/main/notebooks/fastcontext_integration_test.ipynb)
+
 ## Install
 
 1. Put this directory somewhere permanent.
@@ -11,3 +13,13 @@ The same skill directory is designed for Codex, Claude Code, and Antigravity CLI
 3. Ensure `fastcontext` is on `PATH` and your local FastContext endpoint variables are configured, or register a FastContext MCP tool in the host agent.
 
 See `references/setup.md` for details.
+
+## Colab integration test
+
+`notebooks/fastcontext_integration_test.ipynb` is a public, executable test of the real FastContext CLI/model through the `repo-locate` wrapper.
+
+It deliberately uses a synthetic repository fixture rather than any private project or competition code. The fixture separates a future-aware valuation kernel, the actual beam-ranking integration point, relevant tests, and plausible decoys across files. The benchmark oracle is stored outside the directory FastContext explores.
+
+The notebook serves `ShaunGves/FastContext-1.0-4B-SFT` with vLLM on a Colab GPU, runs three independent localization attempts, and reports how often the final citations recover both required targets.
+
+This tests the FastContext backend and wrapper. Whether a frontier agent autonomously chooses to invoke the skill at the right time is a separate outer-agent policy test.
