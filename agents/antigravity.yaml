@@ -3,7 +3,7 @@
 # portable skill semantics and their intended host mapping while the project
 # experiments with an execution-contract layer for Agent Skills.
 
-contract_version: "0.1"
+contract_version: "0.2"
 
 execution:
   cwd: repository-root
@@ -21,7 +21,12 @@ fallback:
   insufficient_result: refine-once-then-host-search
 
 host_mapping:
+  strategy: pre-tool-execution-compiler
+  implementation: integrations/antigravity/hooks/compile_execution.py
   run_command:
     RunPersistent: false
     WaitMsBeforeAsync: 180000
     Cwd: repository-root
+  notes:
+    - WaitMsBeforeAsync is the foreground wait threshold, not the portable wall-clock timeout.
+    - Argument rewriting should be validated against the installed Antigravity CLI version.
