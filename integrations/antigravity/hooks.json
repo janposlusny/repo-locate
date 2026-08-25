@@ -1,0 +1,16 @@
+{
+  "repo-locate-execution-compiler": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ./hooks/compile_execution.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
