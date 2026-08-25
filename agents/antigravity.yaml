@@ -1,0 +1,27 @@
+# Experimental repo-locate execution profile.
+# This is NOT a native Antigravity configuration file. It records the
+# portable skill semantics and their intended host mapping while the project
+# experiments with an execution-contract layer for Agent Skills.
+
+contract_version: "0.1"
+
+execution:
+  cwd: repository-root
+  completion: required
+  expected_duration_seconds: 120
+  timeout_seconds: 180
+
+coordination:
+  while_running:
+    redundant_repository_search: wait
+
+fallback:
+  backend_unavailable: host-search
+  timeout: host-search
+  insufficient_result: refine-once-then-host-search
+
+host_mapping:
+  run_command:
+    RunPersistent: false
+    WaitMsBeforeAsync: 180000
+    Cwd: repository-root
