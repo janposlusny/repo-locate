@@ -11,9 +11,22 @@ The same skill directory is designed for Codex, Claude Code, and Antigravity CLI
 
 1. Put this directory somewhere permanent.
 2. Run `bash ./install.sh` to symlink it into all three agents.
-3. Ensure `fastcontext` is on `PATH` and your local FastContext endpoint variables are configured, or register a FastContext MCP tool in the host agent.
+3. Ensure `fastcontext` is on `PATH` and your local FastContext endpoint variables are configured, or intentionally configure an equivalent FastContext tool in the host agent.
 
 See `references/setup.md` for details.
+
+## Experimental execution contract
+
+A local repository specialist can be correct and still make the outer agent *more* expensive if the host backgrounds a slow inference call, polls it, or starts redundant repository exploration while it is still running.
+
+`repo-locate` therefore treats runtime behavior as a separate experimental layer:
+
+- `SKILL.md` describes portable semantics such as **completion required**, repository-root execution, expected duration, timeout, and fallback.
+- `references/execution-contract.md` explains the proposed host-independent vocabulary.
+- `references/antigravity.md` maps those semantics onto Antigravity CLI behavior.
+- `agents/antigravity.yaml` records the same mapping declaratively as an experiment. It is **not** native Antigravity configuration.
+
+The intent is to learn which execution semantics recur across coding-agent harnesses before proposing a broader convention. MCP remains an optional transport, not a requirement for the canonical shell-wrapper path.
 
 ## Cloud integration test
 
